@@ -1,7 +1,7 @@
 package com.nodey.ips.controller;
 
 import com.nodey.ips.model.IP;
-import com.nodey.ips.service.IpsService;
+import com.nodey.ips.service.IPsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +11,15 @@ import java.util.List;
 @RestController()
 @RequiredArgsConstructor
 @RequestMapping("/ip")
-public class IpsController {
+public class IPsController {
 
-    private final IpsService ipsService;
+    private final IPsService ipsService;
+
+    @Scheduled(fixedRate = 8400000)
+    @GetMapping("/parse")
+    public void registerParseIPs() {
+        ipsService.registerParseIPs();
+    }
 
     @GetMapping(value = "/all")
     public List<IP> getAllIps() {
@@ -25,9 +31,5 @@ public class IpsController {
         return ipsService.getSuccessIP();
     }
 
-    @Scheduled(fixedRate = 8400000)
-    @GetMapping("/parse")
-    public void registerParseIPs() {
-        ipsService.registerParseIPs();
-    }
+
 }

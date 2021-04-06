@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
-public interface IpsService {
+public interface IPsService {
     List<IP> getAllIps();
     boolean checkIP(String ipAddress) throws  IOException;
     IP getSuccessIP() throws IOException;

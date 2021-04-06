@@ -9,5 +9,4 @@ class NipsApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

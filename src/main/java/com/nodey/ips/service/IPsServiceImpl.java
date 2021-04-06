@@ -2,9 +2,8 @@ package com.nodey.ips.service;
 
 import com.nodey.ips.util.Parser;
 import com.nodey.ips.model.IP;
-import com.nodey.ips.repository.IpsRepository;
+import com.nodey.ips.repository.IPsRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
@@ -15,9 +14,9 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class IpsServiceImpl implements IpsService {
+public class IPsServiceImpl implements IPsService {
 
-    private final IpsRepository ipsRepository;
+    private final IPsRepository ipsRepository;
 
     private final Parser parser;
 
@@ -29,26 +28,24 @@ public class IpsServiceImpl implements IpsService {
     @Override
     public boolean checkIP(String ipAddress) throws IOException {
         InetAddress address = InetAddress.getByName(ipAddress);
-        if (address.isReachable(15000)) {
-            return true;
-        }
-        return false;
+        return address.isReachable(5000);
     }
 
     @Override
     public IP getSuccessIP() throws IOException {
         List<IP> ipList = getAllIps();
         List<IP> successIPList = new ArrayList<>();
-
-        for (IP ip : ipList){
-            if (checkIP(ip.getIp())){
+        for (IP ip : ipList) {
+            if (checkIP(ip.getIp())) {
                 successIPList.add(ip);
-            }
-            if (successIPList.size() == 0){
-                parser.parseNewIP();
+                System.out.println(successIPList);
             }
         }
-        return successIPList.get(0);
+        if (successIPList.size() == 0){
+            registerParseIPs();
+            getSuccessIP();
+        }
+    return successIPList.get(0);
     }
 
     @Override
@@ -73,6 +70,7 @@ public class IpsServiceImpl implements IpsService {
             e.printStackTrace();
         }
 
+        assert ips != null;
         for (IP ip : ips) {
             saveInDB(ip);
         }
