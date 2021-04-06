@@ -1,36 +1,39 @@
-package com.nodey.ips.job;
+package com.nodey.ips.util;
 
 import com.nodey.ips.model.IP;
-import com.nodey.ips.repository.IpsRepository;
-import com.nodey.ips.service.IpsService;
+import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Component
+@RequiredArgsConstructor
 public class Parser {
 
-    @Autowired
-    IpsService ipsService;
+    public List<IP> parseNewIP() throws FileNotFoundException {
+        List<IP> ipResultList = new ArrayList<>();
 
-    @Autowired
-    IpsRepository repository;
+        InputStream inputStream = new FileInputStream("src/main/resources/config.yml");
+        Yaml yaml = new Yaml();
+        Map<String, String> data = yaml.load(inputStream);
 
-    @Scheduled(fixedRate = 8400000)
-    public void parseNewIP(){
-        String url = "https://free-proxy-list.net/";
+        String url = data.get("url");
 
         try {
-            repository.deleteAll();
             Document doc = Jsoup.connect(url).get();
-            Element table = doc.select("table").get(0);
+            Element table = doc.select(data.get("table")).get(0);
             for (Element row : table.select("tr:lt(11):gt(0)")){
                     Elements ips = row.select("td:eq(0)");
                     Elements ports = row.select("td:eq(1)");
@@ -39,10 +42,13 @@ public class Parser {
                     IP obj = new IP();
                     obj.setIp(ip);
                     obj.setPort(port);
-                    repository.save(obj);
+
+                    ipResultList.add(obj);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return ipResultList;
     }
 }

@@ -1,23 +1,25 @@
 package com.nodey.ips.service;
 
-import com.nodey.ips.job.Parser;
+import com.nodey.ips.util.Parser;
 import com.nodey.ips.model.IP;
 import com.nodey.ips.repository.IpsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class IpsServiceImpl implements IpsService {
 
-    @Autowired
-    IpsRepository ipsRepository;
+    private final IpsRepository ipsRepository;
 
-    @Autowired
-    Parser parser;
+    private final Parser parser;
 
     @Override
     public List<IP> getAllIps() {
@@ -25,26 +27,54 @@ public class IpsServiceImpl implements IpsService {
     }
 
     @Override
-    public boolean commands(String ipAddress)
-            throws IOException {
-        InetAddress geek = InetAddress.getByName(ipAddress);
-        if (geek.isReachable(15000)) {
+    public boolean checkIP(String ipAddress) throws IOException {
+        InetAddress address = InetAddress.getByName(ipAddress);
+        if (address.isReachable(15000)) {
             return true;
         }
         return false;
     }
 
     @Override
-    public String getAndCheckIP() throws IOException {
-            List<IP> ipList = getAllIps();
-            for (IP ip : ipList) {
-                if (commands(ip.getIp())) {
-                    return "Достуный IP адресс: " + ip.getIp() + ":" + ip.getPort();
-                } else {
-                    parser.parseNewIP();
-                    continue;
-                }
+    public IP getSuccessIP() throws IOException {
+        List<IP> ipList = getAllIps();
+        List<IP> successIPList = new ArrayList<>();
+
+        for (IP ip : ipList){
+            if (checkIP(ip.getIp())){
+                successIPList.add(ip);
             }
-            return "Нет доступных IP";
+            if (successIPList.size() == 0){
+                parser.parseNewIP();
+            }
+        }
+        return successIPList.get(0);
+    }
+
+    @Override
+    public void clearDB() {
+        ipsRepository.deleteAll();
+    }
+
+    @Override
+    public void saveInDB(IP ip) {
+        ipsRepository.save(ip);
+    }
+
+    @Override
+    public void registerParseIPs() {
+        clearDB();
+
+        List<IP> ips = null;
+
+        try {
+            ips = this.parser.parseNewIP();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        for (IP ip : ips) {
+            saveInDB(ip);
+        }
     }
 }

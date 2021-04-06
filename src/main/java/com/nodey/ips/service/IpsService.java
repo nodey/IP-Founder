@@ -9,6 +9,9 @@ import java.util.List;
 @Service
 public interface IpsService {
     List<IP> getAllIps();
-    boolean commands(String ipAddress) throws  IOException;
-    String getAndCheckIP() throws IOException;
+    boolean checkIP(String ipAddress) throws  IOException;
+    IP getSuccessIP() throws IOException;
+    void clearDB();
+    void saveInDB(IP ip);
+    void registerParseIPs();
 }
