@@ -10,7 +10,10 @@ import java.util.List;
 public interface IPsService {
     List<IP> getAllIps();
     boolean checkIP(String ipAddress) throws  IOException;
-    IP getSuccessIP() throws IOException;
+    List<IP> getSuccessIP() throws IOException;
+
+    IP getSucIP() throws IOException;
+
     void clearDB();
     void saveInDB(IP ip);
     void registerParseIPs();

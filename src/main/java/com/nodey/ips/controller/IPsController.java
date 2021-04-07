@@ -27,8 +27,13 @@ public class IPsController {
     }
 
     @GetMapping(value = "/get")
-    public IP getIP() throws Exception {
+    public List<IP> getIP() throws Exception {
         return ipsService.getSuccessIP();
+    }
+
+    @GetMapping("/gett")
+    public IP gettIP() throws Exception{
+        return ipsService.getSucIP();
     }
 
 

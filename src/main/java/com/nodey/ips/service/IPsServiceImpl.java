@@ -32,7 +32,7 @@ public class IPsServiceImpl implements IPsService {
     }
 
     @Override
-    public IP getSuccessIP() throws IOException {
+    public List<IP> getSuccessIP() throws IOException {
         List<IP> ipList = getAllIps();
         List<IP> successIPList = new ArrayList<>();
         for (IP ip : ipList) {
@@ -41,11 +41,22 @@ public class IPsServiceImpl implements IPsService {
                 System.out.println(successIPList);
             }
         }
-        if (successIPList.size() == 0){
+        return successIPList;
+        //if (successIPList.size() == 0){
+         //   registerParseIPs();
+        //    getSuccessIP();
+        //}
+    //return successIPList.get(0);
+    }
+
+    @Override
+    public IP getSucIP() throws IOException{
+        List<IP> successfully = getSuccessIP();
+        if (successfully.size() == 0){
             registerParseIPs();
-            getSuccessIP();
+            successfully = getSuccessIP();
         }
-    return successIPList.get(0);
+        return successfully.get(0);
     }
 
     @Override

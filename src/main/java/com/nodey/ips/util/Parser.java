@@ -42,13 +42,11 @@ public class Parser {
                     IP obj = new IP();
                     obj.setIp(ip);
                     obj.setPort(port);
-
                     ipResultList.add(obj);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return ipResultList;
     }
 }
