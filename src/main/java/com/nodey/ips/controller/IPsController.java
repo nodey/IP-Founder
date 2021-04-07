@@ -18,22 +18,20 @@ public class IPsController {
     @Scheduled(fixedRate = 8400000)
     @GetMapping("/parse")
     public void registerParseIPs() {
+
         ipsService.registerParseIPs();
     }
 
     @GetMapping(value = "/all")
     public List<IP> getAllIps() {
+
         return ipsService.getAllIps();
     }
 
-    @GetMapping(value = "/get")
-    public List<IP> getIP() throws Exception {
-        return ipsService.getSuccessIP();
-    }
+    @GetMapping("/get")
+    public IP getIP() throws Exception{
 
-    @GetMapping("/gett")
-    public IP gettIP() throws Exception{
-        return ipsService.getSucIP();
+        return ipsService.getSuccessIP();
     }
 
 

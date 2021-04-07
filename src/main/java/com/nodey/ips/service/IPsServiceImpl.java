@@ -22,55 +22,60 @@ public class IPsServiceImpl implements IPsService {
 
     @Override
     public List<IP> getAllIps() {
+
         return ipsRepository.findAll();
     }
 
     @Override
     public boolean checkIP(String ipAddress) throws IOException {
+
         InetAddress address = InetAddress.getByName(ipAddress);
+
         return address.isReachable(5000);
     }
 
     @Override
-    public List<IP> getSuccessIP() throws IOException {
+    public List<IP> getCheckingIPList() throws IOException {
+
         List<IP> ipList = getAllIps();
-        List<IP> successIPList = new ArrayList<>();
+        List<IP> checkingIPList = new ArrayList<>();
+
         for (IP ip : ipList) {
             if (checkIP(ip.getIp())) {
-                successIPList.add(ip);
-                System.out.println(successIPList);
+                checkingIPList.add(ip);
+                System.out.println(checkingIPList);
             }
         }
-        return successIPList;
-        //if (successIPList.size() == 0){
-         //   registerParseIPs();
-        //    getSuccessIP();
-        //}
-    //return successIPList.get(0);
+        return checkingIPList;
     }
 
     @Override
-    public IP getSucIP() throws IOException{
-        List<IP> successfully = getSuccessIP();
-        if (successfully.size() == 0){
+    public IP getSuccessIP() throws IOException{
+
+        List<IP> successfullyIPListAfterCheckingForValid = getCheckingIPList();
+
+        if (successfullyIPListAfterCheckingForValid.size() == 0){
             registerParseIPs();
-            successfully = getSuccessIP();
+            successfullyIPListAfterCheckingForValid = getCheckingIPList();
         }
-        return successfully.get(0);
+        return successfullyIPListAfterCheckingForValid.get(0);
     }
 
     @Override
     public void clearDB() {
+
         ipsRepository.deleteAll();
     }
 
     @Override
     public void saveInDB(IP ip) {
+
         ipsRepository.save(ip);
     }
 
     @Override
     public void registerParseIPs() {
+
         clearDB();
 
         List<IP> ips = null;

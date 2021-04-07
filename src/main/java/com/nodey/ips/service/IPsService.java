@@ -8,13 +8,18 @@ import java.util.List;
 
 @Service
 public interface IPsService {
-    List<IP> getAllIps();
-    boolean checkIP(String ipAddress) throws  IOException;
-    List<IP> getSuccessIP() throws IOException;
 
-    IP getSucIP() throws IOException;
+    List<IP> getAllIps();
+
+    boolean checkIP(String ipAddress) throws  IOException;
+
+    List<IP> getCheckingIPList() throws IOException;
+
+    IP getSuccessIP() throws IOException;
 
     void clearDB();
+
     void saveInDB(IP ip);
+
     void registerParseIPs();
 }
