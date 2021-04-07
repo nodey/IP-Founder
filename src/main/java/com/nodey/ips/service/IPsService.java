@@ -17,7 +17,7 @@ public interface IPsService {
     boolean checkIP(String ipAddress) throws  IOException;
 
     //Return List with valid IP's
-    List<IP> getCheckingIPList() throws IOException;
+    List<IP> getCheckedIPList() throws IOException;
 
     //Return 1 valid IP for proxy settings
     IP getSuccessIP() throws IOException;
