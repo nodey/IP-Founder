@@ -15,6 +15,7 @@ public class IPsController {
 
     private final IPsService ipsService;
 
+    //Controller which is used Scheduled for parse IP's once in day
     @Scheduled(fixedRate = 8400000)
     @GetMapping("/parse")
     public void registerParseIPs() {
@@ -28,6 +29,7 @@ public class IPsController {
         return ipsService.getAllIps();
     }
 
+    //Return 1 success IP
     @GetMapping("/get")
     public IP getIP() throws Exception{
 

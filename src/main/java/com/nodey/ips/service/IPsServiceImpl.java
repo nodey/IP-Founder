@@ -28,9 +28,9 @@ public class IPsServiceImpl implements IPsService {
 
     @Override
     public boolean checkIP(String ipAddress) throws IOException {
-
+        //Class and method for check valid IP
         InetAddress address = InetAddress.getByName(ipAddress);
-
+        //return true if address is valid
         return address.isReachable(5000);
     }
 
@@ -39,7 +39,7 @@ public class IPsServiceImpl implements IPsService {
 
         List<IP> ipList = getAllIps();
         List<IP> checkingIPList = new ArrayList<>();
-
+        //Bypassing the list of IP's and checking them for validity
         for (IP ip : ipList) {
             if (checkIP(ip.getIp())) {
                 checkingIPList.add(ip);
@@ -53,7 +53,7 @@ public class IPsServiceImpl implements IPsService {
     public IP getSuccessIP() throws IOException{
 
         List<IP> successfullyIPListAfterCheckingForValid = getCheckingIPList();
-
+        //Checking for some one valid IP, if list = null return to checkIP method
         if (successfullyIPListAfterCheckingForValid.size() == 0){
             registerParseIPs();
             successfullyIPListAfterCheckingForValid = getCheckingIPList();
@@ -85,7 +85,7 @@ public class IPsServiceImpl implements IPsService {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
+        //Save IP's in database using forEach
         assert ips != null;
         for (IP ip : ips) {
             saveInDB(ip);

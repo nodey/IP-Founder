@@ -24,14 +24,15 @@ public class Parser {
 
     public List<IP> parseNewIP() throws FileNotFoundException {
         List<IP> ipResultList = new ArrayList<>();
-
+        //Making Map for Use yml config file
         InputStream inputStream = new FileInputStream("src/main/resources/config.yml");
         Yaml yaml = new Yaml();
         Map<String, String> data = yaml.load(inputStream);
-
+        //url of parsing internet resource
         String url = data.get("url");
 
         try {
+            //Traversing the whole table and getting IP's
             Document doc = Jsoup.connect(url).get();
             Element table = doc.select(data.get("table")).get(0);
             for (Element row : table.select("tr:lt(11):gt(0)")){
