@@ -43,7 +43,6 @@ public class IPsServiceImpl implements IPsService {
         for (IP ip : ipList) {
             if (checkIP(ip.getIp())) {
                 checkingIPList.add(ip);
-                System.out.println(checkedIPList);
             }
         }
         return checkingIPList;
