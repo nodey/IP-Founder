@@ -38,14 +38,14 @@ public class IPsServiceImpl implements IPsService {
     public List<IP> getCheckedIPList() throws IOException {
 
         List<IP> ipList = getAllIps();
-        List<IP> checkingIPList = new ArrayList<>();
+        List<IP> checkedIPList = new ArrayList<>();
         //Bypassing the list of IP's and checking them for validity
         for (IP ip : ipList) {
             if (checkIP(ip.getIp())) {
-                checkingIPList.add(ip);
+                checkedIPList.add(ip);
             }
         }
-        return checkingIPList;
+        return checkedIPList;
     }
 
     @Override
