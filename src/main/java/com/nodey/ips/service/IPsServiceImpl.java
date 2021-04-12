@@ -35,7 +35,7 @@ public class IPsServiceImpl implements IPsService {
     }
 
     @Override
-    public List<IP> getCheckingIPList() throws IOException {
+    public List<IP> getCheckedIPList() throws IOException {
 
         List<IP> ipList = getAllIps();
         List<IP> checkingIPList = new ArrayList<>();
@@ -43,7 +43,7 @@ public class IPsServiceImpl implements IPsService {
         for (IP ip : ipList) {
             if (checkIP(ip.getIp())) {
                 checkingIPList.add(ip);
-                System.out.println(checkingIPList);
+                System.out.println(checkedIPList);
             }
         }
         return checkingIPList;
@@ -52,13 +52,13 @@ public class IPsServiceImpl implements IPsService {
     @Override
     public IP getSuccessIP() throws IOException{
 
-        List<IP> successfullyIPListAfterCheckingForValid = getCheckingIPList();
+        List<IP> successfullyIPListAfterCheckedForValid = getCheckedIPList();
         //Checking for some one valid IP, if list = null return to checkIP method
-        if (successfullyIPListAfterCheckingForValid.size() == 0){
+        if (successfullyIPListAfterCheckedForValid.size() == 0){
             registerParseIPs();
-            successfullyIPListAfterCheckingForValid = getCheckingIPList();
+            successfullyIPListAfterCheckedForValid = getCheckedIPList();
         }
-        return successfullyIPListAfterCheckingForValid.get(0);
+        return successfullyIPListAfterCheckedForValid.get(0);
     }
 
     @Override
